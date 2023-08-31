@@ -55,7 +55,7 @@ https://github.com/bhexopen/baas.
 
 
 ## Domain name
-- Prod env：https://baas.bluehelix.com
+- Prod env：https://baas.thextomo.com
 
 ## HTTPMethods
 GET POST
@@ -69,7 +69,7 @@ When accessing API, the UNIX EPOCH timestamp(ms), expires in 120000ms.
 
 METHOD    | URL | TIMESTAMP
 -----------|-----------------------|----------------------
-POST |    https://baas.bluehelix.com/api/v1/test                   | 1580887996488
+POST |    https://baas.thextomo.com/api/v1/test                   | 1580887996488
 
 The request data shown on the right:：
 
@@ -98,7 +98,7 @@ In the HTTP request, enter the header to bypass the verification:
 
 METHOD    | URL | TIMESTAMP
 -----------|-----------------------|----------------------
-GET |    https://baas.bluehelix.com/api/v1/test?chain=ABC                   | 1580887996488
+GET |    https://baas.thextomo.com/api/v1/test?chain=ABC                   | 1580887996488
 
 Before signing in, you need to sort the request parameters according to the first letter of the key to obtain the following data `GET|/api/v1/test?chain=ABC|1580887996488`
 
@@ -124,7 +124,7 @@ curl
   -H "BWAAS-API-KEY: 123"
   -H "BWAAS-API-TIMESTAMP: 1580887996488"
   -H "BWAAS-API-SIGNATURE: f321da3"
-  https://baas.bluehelix.com/api/v1/address/unused/count/
+  https://baas.thextomo.com/api/v1/address/unused/count/
 ?chain=ABC
 ```
 
@@ -189,7 +189,7 @@ curl
       ]
     }
   '
-  https://baas.bluehelix.com/api/v1/address/add
+  https://baas.thextomo.com/api/v1/address/add
 ```
 
 ```golang
@@ -260,7 +260,7 @@ curl
         "block_time": "1234"
     }
   '
-  https://baas.bluehelix.com/api/v1/notify/deposit
+  https://baas.thextomo.com/api/v1/notify/deposit
 ```
 
 ```golang
@@ -331,7 +331,7 @@ curl
   -H "BWAAS-API-KEY: 123"
   -H "BWAAS-API-TIMESTAMP: 1580887996488"
   -H "BWAAS-API-SIGNATURE: f321da3"
-  https://baas.bluehelix.com/api/v1/withdrawal/orders?chain=ABC
+  https://baas.thextomo.com/api/v1/withdrawal/orders?chain=ABC
 ```
 
 ```golang
@@ -432,7 +432,7 @@ curl
     "block_time": "1540480255"
   }
   '
-  https://baas.bluehelix.com/api/v1/notify/withdrawal
+  https://baas.thextomo.com/api/v1/notify/withdrawal
 ```
 
 ```golang
@@ -511,7 +511,7 @@ curl
     "reason": "invalid address"
   }
   '
-  https://baas.bluehelix.com/api/v1/notify/failed
+  https://baas.thextomo.com/api/v1/notify/failed
 ```
 
 ```golang
@@ -575,7 +575,7 @@ curl
     "last_block_height": "100000"
   }
   '
-  https://baas.bluehelix.com/api/v1/asset/verify
+  https://baas.thextomo.com/api/v1/asset/verify
 ```
 
 ```golang
