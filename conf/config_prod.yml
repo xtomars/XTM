@@ -1,0 +1,18 @@
+redis:
+  host: redis-cluster.wallet
+  port: 6379
+  pass:
+  maxConn: 100
+
+baasnode:
+  protocol: tcp
+  port: 6750
+  httpport: 6751
+
+wallet:
+  host: wallet-server.wallet
+  port: 6010
+
+risk:
+  host: risk-server.wallet
+  port: 6060
