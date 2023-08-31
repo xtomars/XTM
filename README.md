@@ -125,16 +125,7 @@ curl
   -H "BWAAS-API-SIGNATURE: f321da3"
   https://baas.thextomo.com/api/v1/address/unused/count/
 ?chain=ABC
-```
 
-```golang
-```
-
-```python
-```
-
-```javascript
-```
 
 > Reponse：
 
@@ -189,16 +180,7 @@ curl
     }
   '
   https://baas.thextomo.com/api/v1/address/add
-```
 
-```golang
-```
-
-```python
-```
-
-```javascript
-```
 
 > Reponse：
 
@@ -260,16 +242,6 @@ curl
     }
   '
   https://baas.thextomo.com/api/v1/notify/deposit
-```
-
-```golang
-```
-
-```python
-```
-
-```javascript
-```
 
 > Reponse：
 
@@ -331,16 +303,6 @@ curl
   -H "BWAAS-API-TIMESTAMP: 1580887996488"
   -H "BWAAS-API-SIGNATURE: f321da3"
   https://baas.thextomo.com/api/v1/withdrawal/orders?chain=ABC
-```
-
-```golang
-```
-
-```python
-```
-
-```javascript
-```
 
 > Reponse：
 
@@ -432,16 +394,6 @@ curl
   }
   '
   https://baas.thextomo.com/api/v1/notify/withdrawal
-```
-
-```golang
-```
-
-```python
-```
-
-```javascript
-```
 
 > Reponse：
 
@@ -489,10 +441,6 @@ wrong： 5.12345000
 
 
 
-
-
-
-
 ## Failed withdrawal notify
 
 > Failed withdrawal notify
@@ -511,16 +459,7 @@ curl
   }
   '
   https://baas.thextomo.com/api/v1/notify/failed
-```
 
-```golang
-```
-
-```python
-```
-
-```javascript
-```
 
 > Reponse：
 
@@ -575,16 +514,7 @@ curl
   }
   '
   https://baas.thextomo.com/api/v1/asset/verify
-```
 
-```golang
-```
-
-```python
-```
-
-```javascript
-```
 
 > Reponse：
 
