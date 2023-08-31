@@ -46,7 +46,6 @@ IP address | 100.100.100.100  (used as IP whitelist restriction, please use a el
 
 ## Client Sample
 Developer can code using any one of the following programming languages (Python, Golang, Java) 
-https://github.com/bhexopen/baas.
 
 # API Signature Authentication
   The data needs to be signed as the following: HTTP_METHOD + | + HTTP_REQUEST_PATH + | + TIMESTAMP + | + PARAMS
