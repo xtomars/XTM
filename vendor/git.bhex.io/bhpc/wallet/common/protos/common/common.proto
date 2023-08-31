@@ -1,0 +1,539 @@
+/*
+ * *******************************************************************
+ * @项目名称: common
+ * @文件名称: common.proto
+ * @Date: 2018/05/07
+ * @Author: qiangjun.chen
+ * @Copyright（C）: 2018 BlueHelix Inc.   All rights reserved.
+ * 注意：本内容仅限于内部传阅，禁止外泄以及用于其他的商业目的.
+ * *******************************************************************
+ */
+
+syntax = "proto3";
+package common;
+
+enum ReturnCode{
+    SUCCESS = 0;
+    SYSTEM_ERROR = 10000;
+    API_ERROR = 51000;
+    WALLET_ERROR = 52000;
+    SIGN_ERROR = 53000;
+    PRIVKEY_ERROR = 54000;
+    CHAIN_ERROR = 55000;
+    RISK_ERROR = 56000;
+    COIN_ERROR = 60000;
+}
+
+message TxIn {
+  string address = 1;
+  string utxoHash = 2;
+  uint32 index = 3;
+  uint64 balance = 4;
+  map<string, string> extension = 5;  // 扩展字段
+}
+
+message TxOut {
+  string address = 1;
+  uint64 amount = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+ message EthMultiSignRequest {
+  string walletAddress = 1;
+  string from = 2;
+  string to = 3;
+  string amount = 4;
+  uint64 nonce = 5;
+  uint64 gasPrice = 6;
+  uint64 decimals = 7;
+  int64 txID = 8;
+  string token_id = 9;
+  map<string, string> extension = 10;  // 扩展字段
+ }
+
+ message EthMultiSignReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  map<string, string> extension = 4;  // 扩展字段
+ }
+
+ message Erc20MultiSignRequest {
+  EthMultiSignRequest base = 1;
+  string tokenAddress = 2;
+ }
+
+ message Erc20MultiSignReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  map<string, string> extension = 4;  // 扩展字段
+ }
+
+ message UtxoMultiSignRequest {
+  repeated common.TxIn txIns = 1;
+  repeated common.TxOut txOuts = 2;
+  repeated bytes signs = 3;
+  bytes pkScript = 4;
+  string omniTo = 5;
+  string omniValue = 6;
+  string token_id = 7;  //
+  map<string, string> extension = 8;  // 扩展字段
+}
+
+message UtxoMultiSignReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  repeated bytes signs = 4;
+  map<string, string> extension = 5;  // 扩展字段
+}
+
+message GetPrivateKeyRequest {
+  repeated string address = 1;
+}
+
+message GetPrivateKeyReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  repeated string address = 3;
+  message PartedPK {
+    uint32 seqno = 1;
+    bytes partedPK = 2;
+  }
+  repeated PartedPK privateKeys = 4;
+}
+
+ message EosLikeSignRequest {
+  string from = 1;
+  string to = 2;
+  string asset = 3;
+  string memo = 4;
+  bytes privateKey = 5;   // 分片私钥·
+  repeated string pubKeys = 6;
+  string headblockID = 7;
+  bytes signedTx = 8;
+  map<string, string> extension = 9;  // 扩展字段
+ }
+
+ message EosLikeSignReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  map<string, string> extension = 4;  // 扩展字段
+ }
+
+// 充币地址,返回充币地址时签名
+message NewAddressSign {
+  int32 code = 1;
+  string msg = 2;
+  string address = 3;
+  int64 sign_time = 4; // 请求时间 unix_timestamp 到秒
+  string sign_nonce = 5; // 不重复的字符串,类uuid
+  string memo = 6;
+  string token_id =7;   //币种，必需参数
+}
+
+message NewAddressSignRequest{
+  NewAddressSign req = 1;
+  string wallet_sign = 2;
+}
+message DepositNotifyRequestSignRequest{
+  DepositNotifyRequestSign req = 1;
+  string wallet_sign = 2;
+}
+message BhWithdrawalRequestSignRequest{
+  BhWithdrawalRequestSign req = 1;
+  string wallet_sign = 2;
+}
+message RequestSignReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  string walletrc_sign = 3;
+}
+
+// 到帐通知签名要素
+message DepositNotifyRequestSign {
+  int64 deposit_id = 1; // 钱包传来的充值订单id，必需参数
+  string token_id = 2; // 币种，必需参数
+  string address = 3; // 本地钱包地址
+  string from_address = 4; // 转账源地址
+  string quantity = 5; // 到账数量
+  string tx_id = 6; // 区块链 tx_id
+  int32 deposit_status = 7; // 状态
+  int64 block_time = 8; // 当前交易所在的区块时间
+  int64 chain_height = 9; // 当前交易所在的区块高度
+  int64 account_id = 10; // 该地址上的充值对应的账户ID，若为空，则说明该地址无匹配账户。
+  int64 sign_time = 11; // 请求时间
+  string sign_nonce = 12; // 不重复的随机串,类似uuid
+  string memo = 13;
+  map<string, string> extension = 14;  // 扩展字段
+  int32 index = 15; // 交易中的index
+}
+
+// 平台对钱包的提币请求签名要素
+message BhWithdrawalRequestSign {
+  int64 org_id = 1;
+  int64 account_id = 2;
+  int64 withdrawal_id = 3;
+  string token_id = 4;
+  string to = 5;
+  string value = 6;
+  string miner_fee = 7;
+  int64 sign_time = 8; // 请求时间 unix_timestamp 到秒
+  string sign_nonce = 9; // 不重复的字符串,类uuid
+  string memo = 10;
+}
+
+
+message RiskStatusReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+ }
+
+message UtxoSignRequest {
+  repeated common.TxIn txIns = 1;
+  repeated common.TxOut txOuts = 2;
+  repeated string address = 3;
+  message PartedPK {
+    uint32 seqno = 1;
+    bytes partedPK = 2;
+  }
+  repeated PartedPK privateKeys = 4;
+  string omniTo = 5;
+  string omniValue = 6;
+  string tokenID = 7;
+  map<string, string> extension = 8;  // 扩展字段
+}
+
+message UtxoSignReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message EthSignRequest{
+  string from = 1;
+  string to = 2;
+  string amount = 3;
+  uint64 nonce = 4;
+  uint64 gasPrice = 5;
+  bytes privateKey = 6;
+  string token_id = 7;
+  map<string, string> extension = 8;  // 扩展字段
+}
+
+message EthSignReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message Erc20SignRequest {
+  string from = 1;
+  string to = 2;
+  string amount = 3;
+  uint64 nonce = 4;
+  uint64 gasPrice = 5;
+  string tokenAddress = 6;
+  uint64 decimals = 7;
+  bytes privateKey = 8;
+  string token_id = 9;
+  map<string, string> extension = 10;  // 扩展字段
+}
+
+message Erc20SignReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message RippleSignRequest{
+    string from = 1;
+    string to = 2;
+    string amount = 3;
+    uint32 tag = 4;
+    string memo = 5;        //null string indicates no memo
+    uint32 seq = 6;
+    string fee = 7;
+    string token_id = 8;
+    bytes privateKey = 9;   //sign addr for multisign
+    map<string, string> extension = 10;  // 扩展字段
+}
+
+message RippleSignReply{
+    common.ReturnCode code = 1;
+    string msg = 2;
+    string account = 3;
+    string signingPubKey = 4;
+    string txnSignature = 5;
+    map<string, string> extension = 6;  // 扩展字段
+}
+
+message RippleMultiSignRequest{
+  string from = 1;
+  string to = 2;
+  string amount = 3;
+  uint32 tag = 4;
+  string memo = 5;        //null string indicates no memo
+  uint32 seq = 6;
+  string fee = 7;
+  string token_id = 8;
+  string sign_addr = 9;   //sign addr for multisign
+  map<string, string> extension = 10;  // 扩展字段
+}
+
+message RippleMultiSignReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  string account = 3;
+  string signingPubKey = 4;
+  string txnSignature = 5;
+  map<string, string> extension = 6;  // 扩展字段
+}
+
+
+message SendOnlineWalletTransactionRequest{
+  string token_id=1;
+  string businessNumber=2;
+  string from=3;
+  string to=4;
+  string amount=5;
+  string fee=6;
+  string gas_price = 7;
+  uint32 gas_limit = 8;
+  uint32 token_type=9;
+  string memo=10;
+  map<string, string> extension = 11; // 扩展字段
+}
+
+message SendOnlineWalletTransactionReply {
+  common.ReturnCode code=1;
+  string msg=2;
+  string txHash=3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message OntMultiSignRequest {
+    string sign_address = 1;
+  string from = 2;
+  string to = 3;
+  string amount = 4;
+  uint64 gasPrice = 5;
+  int64 txID = 6;
+  string token_id = 7;
+    bytes signedTx = 8;
+    bytes pkScript = 9;
+  map<string, string> extension = 10;  // 扩展字段
+
+}
+
+message OntMultiSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4;  // 扩展字段
+}
+message OntSignRequest{
+  string from = 1;
+  string to = 2;
+  string amount = 3;
+  uint64 gasPrice = 4;
+  bytes privateKey = 5;
+  string token_id = 6;
+  map<string, string> extension = 7;  // 扩展字段
+}
+
+message OntSignReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+message VolumeTxInJson {
+  int32 type = 1;
+  int32 subtype = 2;
+  uint64 timestamp = 3;
+  int32 deadline = 4;
+  string senderPublicKey = 5;
+  string recipient = 6;
+  string recipientRS = 7;
+  string amountNQT = 8;
+  string feeNQT = 9;
+  string sender = 10;
+  string senderRS = 11;
+  uint64 height = 12;
+}
+message VolumeSignRequest{
+  string tokenId = 1;
+  string fromAddr = 2;
+  bytes partedPK = 3;
+  bytes unsignedTx = 4;
+  common.VolumeTxInJson txInJson = 5;
+  map<string, string> extension = 6;  // 扩展字段
+}
+
+message VolumeSignReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes signedTx = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message MultiSignMsgRequest{
+  string token_id=1;
+  string address=2;
+  string msg=3;
+}
+
+message MultiSignMsgReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  string signed_msg = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message BaasWithdrawalOrder{
+  string order_id = 1;
+  string token_id = 2;
+  string to = 3;
+  string memo = 4;
+  string amount = 5;
+}
+
+message AtomMultiSignRequest {
+    string sign_address = 1;
+    string from = 2;
+    string to = 3;
+    string amount = 4;
+    uint64 fee = 5;
+    int64 txID = 6;
+    string token_id = 7;
+    bytes signedTx = 8;
+    bytes pkScript = 9;
+    string memo = 10;
+    string accout_number = 11;
+    string sequence = 12;
+    uint64 decimals = 13;
+    string asset_name = 14;
+    map<string, string> extension = 15; // 扩展字段
+    string fee_amount = 16;
+
+}
+
+message AtomMultiSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4; // 扩展字段
+}
+message AtomSignRequest {
+    string from = 1;
+    string to = 2;
+    string amount = 3;
+    uint64 fee = 4;
+    bytes privateKey = 5;
+    string token_id = 6;
+    string memo = 7;
+    string accout_number = 8;
+    string sequence = 9;
+    uint64 decimals = 10;
+    string asset_name = 11;
+    map<string, string> extension = 12; // 扩展字段
+    string fee_amount = 13;
+}
+
+message AtomSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4; // 扩展字段
+}
+
+message AschLikeSignRequest {
+  string from = 1;
+  string to = 2;
+  string amount = 3;
+  uint64 fee = 4;
+  bytes privateKey = 5;
+  string token_id = 6;
+  string memo = 7;
+  uint64 time_stamp = 8;
+  uint64 decimals = 9;
+  string asset_name = 10;
+  map<string, string> extension = 11; // 扩展字段
+  }
+
+  message AschLikeSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4;  // 扩展字段
+  }
+
+
+  message IotexLikeSignRequest{
+    string from = 1;
+    string to = 2;
+    string amount = 3;
+    uint64 nonce = 4;
+    uint64 gasPrice = 5;
+    bytes privateKey = 6;
+    string token_id = 7;
+    string chain_name = 8;
+    map<string, string> extension = 9;  // 扩展字段
+  }
+
+  message IotexLikeSignReply{
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4;  // 扩展字段
+  }
+
+  message Xrc20LikeSignRequest {
+    string from = 1;
+    string to = 2;
+    string amount = 3;
+    uint64 nonce = 4;
+    uint64 gasPrice = 5;
+    string tokenAddress = 6;
+    uint64 decimals = 7;
+    bytes privateKey = 8;
+    string token_id = 9;
+    string chain_name = 10;
+    map<string, string> extension = 11;  // 扩展字段
+  }
+
+  message Xrc20LikeSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4;  // 扩展字段
+  }
+
+  message XtzSignRequest {
+    string from = 1;
+    string to = 2;
+    string amount = 3;
+    string fee = 4;
+    bytes privateKey = 5;
+    string token_id = 6;
+    uint64 counter = 7;
+    bool revealed = 8;
+    string block_hash = 9;
+    uint64 decimals = 10;
+    string block_protocol = 11;
+    map<string, string> extension = 12; // 扩展字段
+}
+
+message XtzSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4; // 扩展字段
+}

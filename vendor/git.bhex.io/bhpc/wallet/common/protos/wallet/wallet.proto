@@ -1,0 +1,508 @@
+/*
+ * *******************************************************************
+ * @项目名称: common
+ * @文件名称: wallet.proto
+ * @Date: 2018/05/14
+ * @Author: qiangjun.chen
+ * @Copyright（C）: 2018 BlueHelix Inc.   All rights reserved.
+ * 注意：本内容仅限于内部传阅，禁止外泄以及用于其他的商业目的.
+ * *******************************************************************
+ */
+
+syntax = "proto3";
+package wallet;
+import "git.bhex.io/bhpc/wallet/common/protos/common/common.proto";
+
+service Wallet {
+  // 请求一个新地址
+  rpc GetNewAddress (GetNewAddressRequest) returns (GetNewAddressReply);
+  // 提现请求
+  rpc Withdrawal (WithdrawalRequest) returns (WithdrawalReply);
+    // 矿工费
+  rpc MinerFee (MinerFeeRequest) returns (MinerFeeReply);
+  // 拿到某个地址的交易记录
+  rpc GetTransactions (GetTransactionsRequest) returns (GetTransactionsReply);
+  // 资产报告
+  rpc GetAssetReport (GetAssetReportRequest) returns (GetAssetReportReply);
+  // 被chainnode服务器调用，通知充值信息
+  rpc NotifyDeposit (NotifyDepositRequest) returns (NotifyDepositReply);
+  // 被chainnode服务器调用，通知资产支出信息
+  rpc NotifyAssetSpent (NotifyAssetSpentRequest) returns (NotifyAssetSpentReply);
+  // 被chainnode服务器调用，通知提现信息
+  rpc NotifyWithdrawal (NotifyWithdrawalRequest) returns (NotifyWithdrawalReply);
+  // 被chainnode服务器调用，通知交易的确认数信息
+  rpc NotifyConfirm (NotifyConfirmRequest) returns (NotifyConfirmReply);
+    // 被chainnode服务器调用，通知交易的event
+  rpc NotifyEvent (NotifyEventRequest) returns (NotifyEventReply);
+  // 被chainnode服务器调用，获取代币信息
+  rpc GetTokens (GetTokensRequest) returns (GetTokensReply);
+  // 归集
+  rpc CollectUser (CollectUserRequest) returns (CollectUserReply);
+  rpc CollectHot (CollectHotRequest) returns (CollectHotReply);
+  rpc CollectFee (CollectFeeRequest) returns (CollectFeeReply);
+  rpc CollectDustUtxo (CollectDustUtxoRequest) returns (CollectDustUtxoReply);
+   // 地址类型校验
+   rpc CheckWithdrawalAddressFormat (CheckWithdrawalAddressFormatRequest) returns (CheckWithdrawalAddressFormatReply);
+
+  // presure_test
+  rpc CollectPresureTest (CollectPresureTestRequest) returns (CollectPresureTestReply);
+
+  // 报告当前链上平均矿工费率
+  rpc NotifyChainMineFee (ChainFeeRequest) returns (ChainFeeReply);
+
+  // 平台调用，一笔新的充值美元请求
+  rpc NewContribution (NewContributionRequest) returns (NewContributionReply);
+
+   // 被平台调用，获取tokenID对应资产信息
+   rpc SumToken (SumTokenRequest) returns (SumTokenReply);
+
+  // 被平台调用，进行数据库处理
+  rpc QueryWalletDB(QueryWalletDBRequest) returns (QueryWalletDBReply);
+
+  // 被平台调用，进行查询订单状态
+  rpc QueryWithdraw (QueryWithdrawRequest) returns (QueryWithdrawReply);
+
+  // 被平台调用，进行地址是否为内部地址
+  rpc QueryAddress (QueryAddressRequest) returns (QueryAddressReply);
+
+  // 被baas chainnode服务器调用，获取待处理的提币订单信息
+  rpc GetWithdrawalOrders (GetWithdrawalOrdersRequest) returns (GetWithdrawalOrdersReply);
+
+  // CheckDepositOrder 被wallet client调用，执行充值订单信息检查
+  rpc CheckDepositOrder (CheckDepositOrderRequest) returns (CheckDepositOrderReply);
+  // CheckWithdrawalOrder 被wallet client调用，执行提现订单信息检查
+  rpc CheckWithdrawalOrder (CheckWithdrawalOrderRequest) returns (CheckWithdrawalOrderReply);
+}
+
+service PtNotify{
+
+    // ptnode 通知 wallet 充值美元到账
+    rpc ContributionNotify (ContributionNotifyRequest) returns (ContributionNotifyReply);
+    // ptnode 通知钱包提现状态变更
+    rpc DisbursementNotify (DisbursementNotifyRequest) returns (DisbursementNotifyReply);
+
+}
+
+message NewContributionRequest {
+    int64 apply_id = 1; // 请求ID
+    int64 org_id = 2;
+    int64 account_id = 3;
+    string pt_account_id = 4;
+    string reference = 5;
+    string amount = 6;
+    string pt_contribution_id = 7;
+}
+
+message NewContributionReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+}
+
+message ContributionNotifyRequest {
+    string contribution_id = 1;
+    string pt_account_id = 2;
+    string amount = 3;
+    string amount_expected = 4;
+    string reference = 5;
+    string status = 6;
+    string transaction_number = 7;
+}
+
+message ContributionNotifyReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+}
+
+message DisbursementNotifyRequest {
+    string disbursement_id = 1;
+    string pt_account_id = 2;
+    string status = 3;
+    string payment_details = 4;
+    string reference_number = 5;
+    string transaction_number = 6;
+}
+
+message DisbursementNotifyReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+}
+
+message GetNewAddressRequest {
+  int64 org_id = 1;
+  int64 account_id = 2;
+  string token_id =  3;
+  string memo = 4;
+  map<string, string> extension = 5;  // 扩展字段
+
+}
+
+message GetNewAddressReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  string address = 3;
+  string memo = 4;
+  int64 sign_time = 5;
+  string sign_nonce = 6;
+  string sign_wallet = 7;
+  string sign_wallet_rc = 8;
+  map<string, string> extension = 9;  // 扩展字段
+  string wallet_memo = 10;
+  bool use_wallet_memo = 11;
+}
+
+message WithdrawalRequest {
+  int64 org_id = 1;
+  int64 account_id = 2;
+  int64 withdrawal_id = 3;
+  string token_id = 4;
+  string to = 5;
+  string value = 6;
+  string miner_fee = 7;
+  string memo = 8;
+  int64 sign_time = 9;
+  string sign_nonce = 10;
+  string sign_bh = 11;
+  string sign_rc = 12;
+  map<string, string> extention = 13; // 扩展字段
+
+}
+
+message WithdrawalReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message GetAssetReportRequest {
+  uint32 offset = 1;
+  uint32 limit = 2;
+}
+
+message Asset {
+  uint64 id = 1;
+  string token_id = 2;
+  string address = 3;
+  string balance = 4;
+  int64 updated_at = 5;
+}
+
+message GetAssetReportReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  repeated Asset asset = 4;
+}
+
+message GetTransactionsRequest {
+  uint64 coinName = 1;
+  string address = 2;
+}
+
+message GetTransactionsReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  string transaction = 3; // json
+}
+
+
+message NotifyDepositRequest {
+  string token_id = 1;    //
+  string from = 2;
+  string to = 3;
+  string value = 4;
+  string txHash = 5;
+  uint32 index = 6;
+  uint64 blockHeight = 7;
+  uint64 blockTime = 8;
+  string memo = 9;
+  map<string, string> extension = 10;  // 扩展字段
+}
+
+message  NotifyDepositReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message NotifyAssetSpentRequest {
+  string token_id = 1;
+  repeated string from = 2;
+  string txHash = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message  NotifyAssetSpentReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message NotifyWithdrawalRequest{
+  string token_id = 1;  // token_id
+  string businessNumber = 2;
+  string txHash = 3;
+  uint64 gasUsed = 4;
+  uint64 blockHeight = 5;
+  uint64 blockTime = 6;
+  map<string, string> extension = 7;  // 扩展字段
+}
+
+message NotifyWithdrawalReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message NotifyConfirmRequest{
+  string token_id = 1;
+  string txHash = 2;
+  uint32 confirm = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message NotifyConfirmReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message Topics {
+    repeated bytes topic= 1;
+}
+
+// 以太坊智能合约转用
+message NotifyEventRequest {
+  string toAddress = 1;
+  string txHash = 2;
+  repeated string txHashes = 3;
+  repeated string addresses = 4;
+  repeated Topics topics = 5;
+}
+
+message NotifyEventReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+}
+
+message MinerFeeRequest {
+    repeated string token_id = 1;
+}
+
+message MinerFeeReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    repeated MinerFeeDetail miner_fees = 3;
+}
+
+message MinerFeeDetail {
+    string token_id = 1;
+    string min_fee = 3;
+    string max_fee = 4;
+    string suggest_fee = 5;
+    string fee_token_id = 6;
+}
+
+message CollectUserRequest {
+  string token_id = 1;
+  repeated string from = 2;
+  string to = 3;
+  string min = 4;
+  string max = 5;
+  map<string, string> extension = 6;  // 扩展字段
+}
+
+message CollectUserReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message CollectHotRequest {
+  string token_id = 1;
+  string from = 2;
+  string to = 3;
+  string amount = 4;
+  map<string, string> extension = 5;  // 扩展字段
+}
+
+message CollectHotReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message CheckWithdrawalAddressFormatRequest {
+  string token_id = 1;
+  string address = 2;
+  string memo = 3;
+}
+
+message CheckWithdrawalAddressFormatReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bool is_contract_address = 3;
+}
+message CollectPresureTestRequest {
+  string token_id = 1;
+  string from = 2;
+  string to = 3;
+  string amount = 4;
+  map<string, string> extension = 5;  // 扩展字段
+}
+
+message CollectPresureTestReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message CollectFeeRequest {
+  string token_id = 1;
+  string from = 2;
+  string to = 3;
+  string amount = 4;
+  map<string, string> extension = 5;  // 扩展字段
+}
+
+message CollectFeeReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message ChainFeeRequest {
+  string fee_token_id = 1;
+  string chain_fee =  2;
+  uint64 chain_height = 3;
+  string update_time =  4;
+}
+
+message ChainFeeReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  string min_fee = 3;
+  string max_fee = 4;
+  string suggest_fee = 5;
+  string fee_token_id = 6;
+}
+
+message GetTokensRequest{
+}
+
+message TokenInfo{
+  string token = 1;
+  string base_token = 2;
+  string contract_address = 3;
+  uint32 decimals = 4;
+}
+message GetTokensReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  repeated TokenInfo tokens = 3;
+}
+
+message SumTokenRequest {
+  string token_id = 1;
+}
+
+message SumTokenReply {
+  string total = 1;
+  string hot_sum = 2;
+}
+
+
+message QueryWalletDBRequest {
+  string method = 1;
+  bytes reqData=2;
+}
+
+message QueryWalletDBReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bytes resData=3;
+}
+
+
+enum OrderStatus {
+  OrderStatusUnknown = 0;
+  Success = 1;
+  Failure = 2;
+  Handling = 3; // 处理中
+  NotExist = 4; // 不存在
+}
+
+message QueryWithdrawRequest {
+  int64 order_id = 1;
+}
+
+message QueryWithdrawReply {
+  string arrive_quantity = 1;
+  string token_id = 2;
+  string tx_id = 3;
+  OrderStatus status = 4;
+
+
+}
+
+message CollectDustUtxoRequest {
+  string token_id = 1;
+  string from = 2;
+  string to = 3;
+  map<string, string> extension = 4;  // 扩展字段
+}
+
+message CollectDustUtxoReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  map<string, string> extension = 3;  // 扩展字段
+}
+
+message QueryAddressRequest{
+  string token_id = 1;
+  string address = 2;
+  string memo = 3;
+}
+
+message QueryAddressReply {
+  common.ReturnCode code = 1;
+  string msg = 2;
+  bool is_inner_address = 3;
+}
+
+message GetWithdrawalOrdersRequest{
+  string api_key = 1;
+  string chain = 2;
+}
+
+
+
+message GetWithdrawalOrdersReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  repeated common.BaasWithdrawalOrder orders = 3;
+}
+
+message CheckDepositOrderRequest{
+  uint64 order_id = 1;
+}
+
+enum CheckReturnCode{
+  ALREADY_OK = 0;
+  CHECK_OK = 1;
+  MANNUEL_CHECK = 2;
+}
+
+message CheckDepositOrderReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  CheckReturnCode result  = 3;
+}
+
+message CheckWithdrawalOrderRequest{
+  uint64 order_id = 1;
+}
+
+message CheckWithdrawalOrderReply{
+  common.ReturnCode code = 1;
+  string msg = 2;
+  CheckReturnCode result  = 3;
+}

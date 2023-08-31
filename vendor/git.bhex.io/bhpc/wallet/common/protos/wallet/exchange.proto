@@ -1,0 +1,66 @@
+/*
+ * *******************************************************************
+ * @项目名称: common
+ * @文件名称: exchange.proto
+ * @Date: 2018/06/13
+ * @Author: zhiming.sun
+ * @Copyright（C）: 2018 BlueHelix Inc.   All rights reserved.
+ * 注意：本内容仅限于内部传阅，禁止外泄以及用于其他的商业目的.
+ * *******************************************************************
+ */
+
+syntax = "proto3";
+package wallet;
+
+option java_package="io.bhex.base.wallet";
+
+service Wallet {   
+  // 请求一个新地址
+  rpc GetNewAddress (GetNewAddressRequest) returns (GetNewAddressReply);
+  // 提现请求
+  rpc Withdrawal (WithdrawalRequest) returns (WithdrawalReply);
+}
+
+enum ReturnCode{
+    SUCCESS = 0;
+    SYSTEM_ERROR = 10000;
+    API_ERROR = 51000;
+    WALLET_ERROR = 52000;
+    SIGN_ERROR = 53000;
+    PRIVKEY_ERROR = 54000;
+    CHAIN_ERROR = 55000;
+    COIN_ERROR = 60000;
+}
+
+message GetNewAddressRequest {
+  int64 orgID = 1;
+  int64 accountID = 2;
+  string coinName = 3; 
+  uint32 count = 4;
+}
+
+message GetNewAddressReply {
+  ReturnCode code = 1;
+  string msg = 2;
+  repeated string addresses = 3;
+}
+
+message Decimal {
+  string str = 1;
+  int64 unscaled_value = 2;
+  int32 scale = 3;
+}
+
+message WithdrawalRequest {
+  int64 orgID = 1;
+  int64 accountID = 2;
+  int64 withdrawalID = 3;
+  string coinName = 4;
+  string to = 5;
+  Decimal value = 6;
+}
+
+message WithdrawalReply {
+  ReturnCode code = 1;
+  string msg = 2;
+}

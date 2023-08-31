@@ -1,0 +1,88 @@
+/*
+ * *******************************************************************
+ * @项目名称: common
+ * @文件名称: chainnode.proto
+ * @Date: 2018/05/14
+ * @Author: zhiming.sun
+ * @Copyright（C）: 2018 BlueHelix Inc.   All rights reserved.
+ * 注意：本内容仅限于内部传阅，禁止外泄以及用于其他的商业目的.
+ * *******************************************************************
+ */
+
+syntax = "proto3";
+package chainnode;
+import "git.bhex.io/bhpc/wallet/common/protos/common/common.proto";
+
+
+service Chainnode {
+  // Wallet调用通知地址的增删信息
+  rpc Address(AddressRequest) returns(AddressReply);
+  // Wallet调用发送签名交易到区块链网络
+  rpc SendTransaction(SendTransactionRequest) returns(SendTransactionReply);
+  rpc SendOnlineWalletTransaction(common.SendOnlineWalletTransactionRequest) returns(common.SendOnlineWalletTransactionReply);
+
+  // Wallet查询链上信息
+  rpc Query(QueryRequest) returns(QueryReply);
+}
+
+enum Action {
+    ADD = 0;
+    REMOVE = 1;
+    CREATE = 2; //Create a new address, only for BEAM
+}
+
+message AddressRequest{
+   string token_id=1;
+   string address=2;
+   Action action=3;  
+   uint64 expiration=4; //expiration time, only for BEAM. 0: will not expire, 1:expirte 1 hour later  
+}
+
+message AddressReply{
+    common.ReturnCode code=1;
+    string msg=2;
+    string address=3;     //return an address, only for BEAM 
+}
+
+message SendTransactionRequest{
+   string token_id=1;
+   string businessNumber=2;
+   bytes txData=3;    
+   map<string, string> extension = 4;  // 扩展字段
+}
+
+message SendTransactionReply{
+    common.ReturnCode code=1;
+    string msg=2;
+    string txHash=3;
+    map<string, string> extension = 4;  // 扩展字段
+}
+
+enum QueryCmd {
+    BALANCE = 0;
+    NONCE = 1;
+    GAS_PRICE = 2;
+    BLOCK_HEIGHT = 3;
+    DECIMALS = 4;
+    BALANCE_OF = 5;
+    ADDRESS_EXIST = 6;
+    HEADBLOCK_ID = 7;
+    TX_ID = 8;
+    ADDRESS_CONTRACT = 9;
+    CREATE_RAW_UNSIGN_TX = 10;
+    CHAIN_ID = 11;
+    CHAIN_STATUS = 12;
+}
+
+message QueryRequest{
+    QueryCmd cmd=1;
+    repeated string paras=2;
+    map<string, string> extension = 3;  // 扩展字段
+}
+
+message QueryReply{
+    common.ReturnCode code=1;
+    string msg=2;
+    uint64 result=3;
+    map<string, string> extension = 4;  // 扩展字段
+}

@@ -1,0 +1,120 @@
+/*
+ * *******************************************************************
+ * @项目名称: common
+ * @文件名称: sign.proto
+ * @Date: 2018/05/14
+ * @Author: qiangjun.chen
+ * @Copyright（C）: 2018 BlueHelix Inc.   All rights reserved.
+ * 注意：本内容仅限于内部传阅，禁止外泄以及用于其他的商业目的.
+ * *******************************************************************
+ */
+
+syntax = "proto3";
+package sign;
+import "git.bhex.io/bhpc/wallet/common/protos/common/common.proto";
+import "git.bhex.io/bhpc/wallet/common/protos/token/tron/core/Tron.proto";
+
+
+service Sign {
+    // UTXO模型的一类代币的签名接口
+    rpc UtxoSign (common.UtxoSignRequest) returns (common.UtxoSignReply);
+    // 以账户余额模型的一类代币的签名接口
+    rpc EthSign (common.EthSignRequest) returns (common.EthSignReply);
+    rpc EtcSign (common.EthSignRequest) returns (common.EthSignReply);
+    rpc Erc20Sign (common.Erc20SignRequest) returns (common.Erc20SignReply);
+    // UTXO 多签名
+    rpc UtxoMultiSign (common.UtxoMultiSignRequest) returns (common.UtxoMultiSignReply);
+    rpc EthMultiSign (common.EthMultiSignRequest) returns (common.EthMultiSignReply);
+    rpc Erc20MultiSign (common.Erc20MultiSignRequest) returns (common.Erc20MultiSignReply);
+    // eos like
+    rpc EosLikeSign (common.EosLikeSignRequest) returns (common.EosLikeSignReply);
+    rpc EosLikeSingleSign (common.EosLikeSignRequest) returns (common.EosLikeSignReply);
+    // tron
+    rpc TronSign (TronSignRequest) returns (TronSignReply);
+    //Ripple  Sign
+    rpc RippleSign (common.RippleSignRequest) returns (common.RippleSignReply);
+    rpc RippleMultiSign (common.RippleMultiSignRequest) returns (common.RippleMultiSignReply);
+    //Ont MultiSign
+    rpc OntSign (common.OntSignRequest) returns (common.OntSignReply);
+    rpc OntMultiSign (common.OntMultiSignRequest) returns (common.OntMultiSignReply);
+
+    // VolumeSign volume single sign
+    rpc VolumeSign (common.VolumeSignRequest) returns (common.VolumeSignReply);
+    // EthLikeSign chain forked from eth single sign
+    rpc EthLikeSign (EthLikeSignRequest) returns (EthLikeSignReply);
+    // Erc20LikeSign chain forked from eth single sign for erc20 like tokens
+    rpc Erc20LikeSign (Erc20LikeSignRequest) returns (Erc20LikeSignReply);
+
+    rpc AtomSign (common.AtomSignRequest) returns (common.AtomSignReply);
+    rpc AtomMultiSign (common.AtomMultiSignRequest) returns (common.AtomMultiSignReply);
+
+    rpc BnbSign (common.AtomSignRequest) returns (common.AtomSignReply);
+    rpc BnbMultiSign (common.AtomMultiSignRequest) returns (common.AtomMultiSignReply);
+
+    rpc PocSign (common.AtomSignRequest) returns (common.AtomSignReply);
+    rpc PocMultiSign (common.AtomMultiSignRequest) returns (common.AtomMultiSignReply);
+
+    rpc MultiSignMsg (common.MultiSignMsgRequest) returns (common.MultiSignMsgReply);
+    //Asch like Sign
+    rpc AschLikeSign (common.AschLikeSignRequest) returns (common.AschLikeSignReply);
+
+     // IotexLikeSign iotex like Sign
+     rpc IotexLikeSign (common.IotexLikeSignRequest) returns (common.IotexLikeSignReply);
+     // Xrc20LikeSign iotex token sign
+    rpc Xrc20LikeSign (common.Xrc20LikeSignRequest) returns (common.Xrc20LikeSignReply);
+    rpc XtzSign (common.XtzSignRequest) returns (common.XtzSignReply);
+}
+
+message TronSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    protocol.Transaction signedTx = 3;
+    map<string, string> extension = 4; // 扩展字段
+}
+
+message TronSignRequest {
+    string fromAddr = 1;
+    bytes partedPK = 2;
+    protocol.Transaction Tx = 3;
+    map<string, string> extension = 4; // 扩展字段
+}
+
+message EthLikeSignRequest {
+    string from = 1;
+    string to = 2;
+    string amount = 3;
+    uint64 nonce = 4;
+    uint64 gasPrice = 5;
+    bytes privateKey = 6;
+    string token_id = 7;
+    string chain_id = 8;
+    map<string, string> extension = 9; // 扩展字段
+}
+
+message EthLikeSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4; // 扩展字段
+}
+
+message Erc20LikeSignRequest {
+    string from = 1;
+    string to = 2;
+    string amount = 3;
+    uint64 nonce = 4;
+    uint64 gasPrice = 5;
+    string tokenAddress = 6;
+    uint64 decimals = 7;
+    bytes privateKey = 8;
+    string token_id = 9;
+    string chain_id = 10;
+    map<string, string> extension = 11; // 扩展字段
+}
+
+message Erc20LikeSignReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    bytes signedTx = 3;
+    map<string, string> extension = 4; // 扩展字段
+}

@@ -1,0 +1,238 @@
+/*
+ * *******************************************************************
+ * @项目名称: common
+ * @文件名称: risk.pb
+ * @Date: 2018/06/11
+ * @Author: chunhua.guo
+ * @Copyright（C）: 2018 BlueHelix Inc.   All rights reserved.
+ * 注意：本内容仅限于内部传阅，禁止外泄以及用于其他的商业目的.
+ * *******************************************************************
+ */
+
+syntax = "proto3";
+package risk;
+import "git.bhex.io/bhpc/wallet/common/protos/common/common.proto";
+import "git.bhex.io/bhpc/wallet/common/protos/sign/sign.proto";
+
+service Risk {
+    rpc GetPrivateKey (common.GetPrivateKeyRequest) returns (common.GetPrivateKeyReply);
+    // UTXO模型的一类代币的签名接口
+    rpc UtxoMultiSign (common.UtxoMultiSignRequest) returns (common.UtxoMultiSignReply);
+    rpc EthMultiSign (common.EthMultiSignRequest) returns (common.EthMultiSignReply);
+    rpc Erc20MultiSign (common.Erc20MultiSignRequest) returns (common.Erc20MultiSignReply);
+    // eos like
+    rpc EosLikeSign (common.EosLikeSignRequest) returns (common.EosLikeSignReply);
+    //Ripple  MultiSign
+    rpc RippleMultiSign (common.RippleMultiSignRequest) returns (common.RippleMultiSignReply);
+    rpc GetBeamNewAddressSign (common.NewAddressSignRequest) returns (common.RequestSignReply);
+    rpc GetCoboNewAddressSign (common.NewAddressSignRequest) returns (common.RequestSignReply);
+    rpc GetCoboApiNewAddressSign (common.NewAddressSignRequest) returns (common.RequestSignReply);
+    rpc GetBaasApiNewAddressSign (common.NewAddressSignRequest) returns (common.RequestSignReply);
+    //Ont MultiSign
+    rpc OntMultiSign (common.OntMultiSignRequest) returns (common.OntMultiSignReply);
+    //Atom MultiSign
+    rpc AtomMultiSign (common.AtomMultiSignRequest) returns (common.AtomMultiSignReply);
+    //Atom MultiSign
+    rpc BnbMultiSign (common.AtomMultiSignRequest) returns (common.AtomMultiSignReply);
+    rpc PocMultiSign (common.AtomMultiSignRequest) returns (common.AtomMultiSignReply);
+
+    rpc GetNewAddressSign (common.NewAddressSignRequest) returns (common.RequestSignReply);
+    rpc GetDepositNotifyRequestSign (common.DepositNotifyRequestSignRequest) returns (common.RequestSignReply);
+    rpc GetBhWithdrawalRequestSign (common.BhWithdrawalRequestSignRequest) returns (common.RequestSignReply);
+
+    rpc UtxoWalletRc (UtxoWalletRcRequest) returns (common.RiskStatusReply);
+    rpc EthWalletRc (EthWalletRcRequest) returns (common.RiskStatusReply);
+    rpc EtcWalletRc (EthWalletRcRequest) returns (common.RiskStatusReply);
+    rpc Erc20WalletRc (Erc20WalletRcRequest) returns (common.RiskStatusReply);
+    rpc UtxoMultiWalletRc (UtxoMultiWalletRcRequest) returns (common.RiskStatusReply);
+    rpc EthMultiWalletRc (EthMultiWalletRcRequest) returns (common.RiskStatusReply);
+    rpc Erc20MultiWalletRc (Erc20MultiWalletRcRequest) returns (common.RiskStatusReply);
+    rpc EosLikeWalletRc (EosLikeWalletRcRequest) returns (common.RiskStatusReply);
+    rpc TronWalletRc (TronWalletRcRequest) returns (common.RiskStatusReply);
+    rpc EthLikeWalletRc (EthLikeWalletRcRequest) returns (common.RiskStatusReply);
+    rpc Erc20LikeWalletRc (Erc20LikeWalletRcRequest) returns (common.RiskStatusReply);
+    // Ripple rc
+    rpc RippleWalletRc (RippleWalletRcRequest) returns (common.RiskStatusReply);
+    rpc RippleMultiWalletRc (RippleMultiWalletRcRequest) returns (common.RiskStatusReply);
+    rpc OnlineWalletTokenWalletRc (OnlineWalletTokenWalletRcRequest) returns (common.RiskStatusReply);
+    rpc OnlineWalletTokenTypeWalletRc (OnlineWalletTokenWalletRcRequest) returns (common.RiskStatusReply);
+
+    rpc OntWalletRc (OntWalletRcRequest) returns (common.RiskStatusReply);
+    rpc OntMultiWalletRc (OntMultiWalletRcRequest) returns (common.RiskStatusReply);
+
+    rpc AtomWalletRc (AtomWalletRcRequest) returns (common.RiskStatusReply);
+    rpc AtomMultiWalletRc (AtomMultiWalletRcRequest) returns (common.RiskStatusReply);
+
+    rpc BnbWalletRc (AtomWalletRcRequest) returns (common.RiskStatusReply);
+    rpc BnbMultiWalletRc (AtomMultiWalletRcRequest) returns (common.RiskStatusReply);
+
+    rpc PocWalletRc (AtomWalletRcRequest) returns (common.RiskStatusReply);
+    rpc PocMultiWalletRc (AtomMultiWalletRcRequest) returns (common.RiskStatusReply);
+
+    // VolumeWalletRc volume rc
+    rpc VolumeWalletRc (VolumeWalletRcRequest) returns (common.RiskStatusReply);
+    // AschLikeWalletRc asch rc
+    rpc AschLikeWalletRc (AschLikeWalletRcRequest) returns (common.RiskStatusReply);
+
+    rpc WithdrawlSignatureRc (WithdrawlSignatureRcRequest) returns (common.RiskStatusReply);
+    rpc SignTxRc (SignTxRcRequest) returns (common.RiskStatusReply);
+    rpc MultiSignMsg (common.MultiSignMsgRequest) returns (common.MultiSignMsgReply);
+
+    // get rc signature for baas withdrawal orders
+    rpc BaasWithdrawalWalletRc (BaasWithdrawalWalletRcRequest) returns (BaasWithdrawalWalletRcReply);
+
+    // rpc UtxoSignRc(UtxoWalletRcRequest) returns (common.RiskStatusReply);
+    // rpc EthSignRc(EthWalletRcRequest) returns (common.RiskStatusReply);
+    // rpc EtcSignRc(EthWalletRcRequest) returns (common.RiskStatusReply);
+    // rpc Erc20SignRc(Erc20WalletRcRequest) returns (common.RiskStatusReply);
+    // rpc UtxoMultiSignRc(UtxoMultiWalletRcRequest) returns (common.RiskStatusReply);
+    // rpc EthMultiSignRc(EthMultiWalletRcRequest) returns (common.RiskStatusReply);
+    // rpc Erc20MultiSignRc(Erc20MultiWalletRcRequest) returns (common.RiskStatusReply);
+    // rpc EosLikeSignRc(EosLikeWalletRcRequest) returns (common.RiskStatusReply);
+    rpc IotexLikeWalletRc (IotexLikeWalletRcRequest) returns (common.RiskStatusReply);
+    rpc Xrc20LikeWalletRc (Xrc20LikeWalletRcRequest) returns (common.RiskStatusReply);
+    rpc XtzWalletRc (XtzWalletRcRequest) returns (common.RiskStatusReply);
+}
+
+message WithdrawlSignatureRcRequest {
+    common.BhWithdrawalRequestSign sign_req = 1;
+    string bh_sign = 2;
+    string rc_sign = 3;
+}
+
+message SignTxRcRequest {
+    string tx_hash = 1;
+}
+
+
+message UtxoWalletRcRequest {
+    repeated int64 withdrawl_id = 1;
+    common.UtxoSignRequest sign_req = 2;
+}
+
+message EthWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.EthSignRequest sign_req = 2;
+}
+
+message Erc20WalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.Erc20SignRequest sign_req = 2;
+}
+
+message UtxoMultiWalletRcRequest {
+    repeated int64 withdrawl_id = 1;
+    common.UtxoMultiSignRequest sign_req = 2;
+}
+
+message EthMultiWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.EthMultiSignRequest sign_req = 2;
+}
+
+message Erc20MultiWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.Erc20MultiSignRequest sign_req = 2;
+}
+
+message EosLikeWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.EosLikeSignRequest sign_req = 2;
+}
+
+message TronWalletRcRequest {
+    int64 withdrawl_id = 1;
+    string token_id = 2;
+    sign.TronSignRequest sign_req = 3;
+}
+
+message RippleWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.RippleSignRequest sign_req = 2;
+}
+
+message RippleMultiWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.RippleMultiSignRequest sign_req = 2;
+}
+message OnlineWalletTokenWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.SendOnlineWalletTransactionRequest sign_req = 2;
+}
+
+message OntWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.OntSignRequest sign_req = 2;
+}
+
+message OntMultiWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.OntMultiSignRequest sign_req = 2;
+}
+
+message VolumeWalletRcRequest {
+    int64 withdrawl_id = 1;
+    string token_id = 2;
+    common.VolumeSignRequest sign_req = 3;
+}
+
+message EthLikeWalletRcRequest {
+    int64 withdrawl_id = 1;
+    string token_id = 2;
+    sign.EthLikeSignRequest sign_req = 3;
+}
+
+message Erc20LikeWalletRcRequest {
+    int64 withdrawl_id = 1;
+    sign.Erc20LikeSignRequest sign_req = 2;
+}
+
+message AtomWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.AtomSignRequest sign_req = 2;
+}
+
+message AtomMultiWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.AtomMultiSignRequest sign_req = 2;
+}
+
+
+message BaasWithdrawalWalletRcRequest {
+    repeated common.BaasWithdrawalOrder orders = 1;
+    string method = 2;
+    string url = 3;
+    string timestamp = 4;
+}
+message BaasWithdrawalRcSign {
+    string order_id = 1;
+    string rc_sign = 2;
+}
+
+message BaasWithdrawalWalletRcReply {
+    common.ReturnCode code = 1;
+    string msg = 2;
+    repeated BaasWithdrawalRcSign rc_signs = 3;
+}
+
+message AschLikeWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.AschLikeSignRequest sign_req = 2;
+}
+
+message IotexLikeWalletRcRequest {
+    int64 withdrawl_id = 1;
+    string chain_name = 2;
+    common.IotexLikeSignRequest sign_req = 3;
+}
+
+message Xrc20LikeWalletRcRequest {
+    int64 withdrawl_id = 1;
+    string chain_name = 2;
+    common.Xrc20LikeSignRequest sign_req = 3;
+}
+
+message XtzWalletRcRequest {
+    int64 withdrawl_id = 1;
+    common.XtzSignRequest sign_req = 2;
+}
